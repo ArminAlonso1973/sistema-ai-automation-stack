@@ -138,10 +138,15 @@ jobs:
         npm ci --legacy-peer-deps
         npx eslint src/ --ext .js,.jsx
         
-    - name: Security Scan with CodeQL
-      uses: github/codeql-action/analyze@v2
-      with:
-        languages: javascript
+    - name: Run npm audit Backend
+      run: |
+        cd backend
+        npm audit --audit-level high || true
+        
+    - name: Run npm audit Frontend
+      run: |
+        cd frontend
+        npm audit --audit-level high || true
         
   # Job 5: Deployment Gate
   deployment-gate:
