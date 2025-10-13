@@ -1,0 +1,1 @@
+// Layout.jsx - Componente de layout

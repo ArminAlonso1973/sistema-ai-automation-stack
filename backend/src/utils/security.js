@@ -1,0 +1,1 @@
+// security.js - Utilidades de seguridad

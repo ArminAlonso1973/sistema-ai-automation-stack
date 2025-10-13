@@ -1,0 +1,1 @@
+// Dashboard.jsx - Página del dashboard

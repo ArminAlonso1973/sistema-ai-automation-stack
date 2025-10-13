@@ -1,0 +1,1 @@
+// cache.service.js - Servicio para manejo de caché

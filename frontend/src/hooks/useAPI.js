@@ -1,0 +1,1 @@
+// useAPI.js - Hook para API

@@ -1,0 +1,1 @@
+// admin.routes.js - Rutas para administración

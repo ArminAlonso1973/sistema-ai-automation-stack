@@ -1,0 +1,1 @@
+// Proposals.jsx - Página de propuestas

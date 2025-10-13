@@ -1,0 +1,1 @@
+// server.js - Archivo principal del backend

@@ -1,0 +1,1 @@
+// LeadTable.jsx - Componente de tabla de leads

@@ -1,0 +1,1 @@
+// StatsCard.jsx - Componente de tarjeta de estadísticas

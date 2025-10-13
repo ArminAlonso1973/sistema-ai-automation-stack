@@ -1,0 +1,177 @@
+name: CI/CD Pipeline - Sistema AI Automation Stack
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Job 1: Backend Testing
+  backend-tests:
+    runs-on: ubuntu-latest
+    name: Backend Tests & Security
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+        
+    - name: Install Backend Dependencies
+      run: |
+        cd backend
+        npm ci
+        
+    - name: Run Backend Unit Tests
+      run: |
+        cd backend
+        npm run test:coverage
+        
+    - name: Run Backend Integration Tests
+      run: |
+        cd backend
+        npm run test
+        
+    - name: Security Audit
+      run: |
+        cd backend
+        npm audit --audit-level high
+        
+    - name: Upload Backend Coverage
+      uses: codecov/codecov-action@v3
+      with:
+        directory: ./backend/coverage
+        flags: backend
+        
+  # Job 2: Frontend Testing
+  frontend-tests:
+    runs-on: ubuntu-latest
+    name: Frontend Tests & Build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+        
+    - name: Install Frontend Dependencies
+      run: |
+        cd frontend
+        npm ci
+        
+    - name: Run Frontend Tests
+      run: |
+        cd frontend
+        npm run test
+        
+    - name: Build Frontend
+      run: |
+        cd frontend
+        npm run build
+        
+    - name: Upload Frontend Coverage
+      uses: codecov/codecov-action@v3
+      with:
+        directory: ./frontend/coverage
+        flags: frontend
+        
+  # Job 3: Integration & E2E Tests
+  integration-tests:
+    runs-on: ubuntu-latest
+    name: Integration & E2E Tests
+    needs: [backend-tests, frontend-tests]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        
+    - name: Install All Dependencies
+      run: |
+        cd backend && npm ci
+        cd ../frontend && npm ci
+        
+    - name: Start Backend Server
+      run: |
+        cd backend
+        npm start &
+        sleep 10
+        
+    - name: Run Integration Tests
+      run: |
+        cd backend
+        npm run test:integration
+        
+  # Job 4: Code Quality & Security
+  code-quality:
+    runs-on: ubuntu-latest
+    name: Code Quality & Security Scan
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run ESLint Backend
+      run: |
+        cd backend
+        npm ci
+        npx eslint src/ --ext .js
+        
+    - name: Run ESLint Frontend
+      run: |
+        cd frontend
+        npm ci
+        npx eslint src/ --ext .js,.jsx
+        
+    - name: Security Scan with CodeQL
+      uses: github/codeql-action/analyze@v2
+      with:
+        languages: javascript
+        
+  # Job 5: Deployment Gate
+  deployment-gate:
+    runs-on: ubuntu-latest
+    name: Deployment Readiness Check
+    needs: [backend-tests, frontend-tests, integration-tests, code-quality]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Validate Deployment Readiness
+      run: |
+        echo "✅ All tests passed"
+        echo "✅ Code quality checks passed"
+        echo "✅ Security scans completed"
+        echo "🚀 Ready for deployment"
+        
+    - name: Generate Deployment Report
+      run: |
+        echo "# Deployment Report" > deployment-report.md
+        echo "- Backend Tests: ✅ PASSED" >> deployment-report.md
+        echo "- Frontend Tests: ✅ PASSED" >> deployment-report.md
+        echo "- Integration Tests: ✅ PASSED" >> deployment-report.md
+        echo "- Security Scan: ✅ PASSED" >> deployment-report.md
+        echo "- Deployment Status: 🚀 APPROVED" >> deployment-report.md
+        
+    - name: Upload Deployment Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: deployment-report
+        path: deployment-report.md
