@@ -68,7 +68,7 @@ jobs:
     - name: Install Frontend Dependencies
       run: |
         cd frontend
-        npm ci
+        npm ci --legacy-peer-deps
         
     - name: Run Frontend Tests
       run: |
@@ -104,7 +104,7 @@ jobs:
     - name: Install All Dependencies
       run: |
         cd backend && npm ci
-        cd ../frontend && npm ci
+        cd ../frontend && npm ci --legacy-peer-deps
         
     - name: Start Backend Server
       run: |
@@ -135,7 +135,7 @@ jobs:
     - name: Run ESLint Frontend
       run: |
         cd frontend
-        npm ci
+        npm ci --legacy-peer-deps
         npx eslint src/ --ext .js,.jsx
         
     - name: Security Scan with CodeQL
