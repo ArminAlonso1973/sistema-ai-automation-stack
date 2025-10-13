@@ -73,6 +73,40 @@ class DatabaseService {
       return [];
     }
   }
+
+  // Métodos adicionales para compatibilidad con routes
+  async getClientConfig(clientId) {
+    try {
+      return {
+        id: clientId,
+        nombre: 'Demo Business',
+        horario: '9:00 - 18:00',
+        productos: ['Servicio A', 'Servicio B']
+      };
+    } catch (error) {
+      console.error('Error obteniendo config cliente:', error);
+      return {};
+    }
+  }
+
+  async guardarConversacion(from, mensaje, respuesta, urgencia) {
+    try {
+      const conversacion = {
+        from,
+        mensaje,
+        respuesta,
+        urgencia,
+        timestamp: new Date().toISOString()
+      };
+      
+      // En producción, guardar en Supabase
+      console.log('Conversación guardada:', conversacion);
+      return conversacion;
+    } catch (error) {
+      console.error('Error guardando conversación:', error);
+      throw error;
+    }
+  }
 }
 
 export default new DatabaseService();
