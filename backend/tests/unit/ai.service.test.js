@@ -1,45 +1,53 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { AIService } from '../../src/services/ai.service.js';
 
-// Mock OpenAI
-const mockOpenAI = {
-  chat: {
-    completions: {
-      create: vi.fn()
+// Mock OpenAI BEFORE importing AIService
+vi.mock('openai', () => {
+  const mockOpenAI = {
+    chat: {
+      completions: {
+        create: vi.fn()
+      }
     }
-  }
-};
+  };
+  
+  return {
+    default: class OpenAI {
+      constructor() {
+        Object.assign(this, mockOpenAI);
+      }
+    }
+  };
+});
 
-vi.mock('openai', () => ({
-  default: class OpenAI {
-    constructor() {
-      return mockOpenAI;
-    }
-  }
-}));
+// IMPORT DEFAULT (not named export)
+import aiService from '../../src/services/ai.service.js';
 
 describe('AIService', () => {
-  let aiService;
-
   beforeEach(() => {
-    aiService = new AIService();
     vi.clearAllMocks();
   });
 
   describe('classifyLead', () => {
     it('debe clasificar lead correctamente', async () => {
-      mockOpenAI.chat.completions.create.mockResolvedValue({
-        choices: [{
-          message: {
-            content: JSON.stringify({
-              classification: 'interesado',
-              priority: 'alta',
-              reasoning: 'Cliente interesado',
-              confidence: 0.9
+      // Mock OpenAI response directly on the service instance
+      aiService.openai = {
+        chat: {
+          completions: {
+            create: vi.fn().mockResolvedValue({
+              choices: [{
+                message: {
+                  content: JSON.stringify({
+                    classification: 'interesado',
+                    priority: 'alta',
+                    reasoning: 'Cliente interesado',
+                    confidence: 0.9
+                  })
+                }
+              }]
             })
           }
-        }]
-      });
+        }
+      };
 
       const result = await aiService.classifyLead('Quiero comprar ahora');
       
@@ -52,7 +60,14 @@ describe('AIService', () => {
     });
 
     it('debe manejar errores correctamente', async () => {
-      mockOpenAI.chat.completions.create.mockRejectedValue(new Error('API Error'));
+      // Mock error response
+      aiService.openai = {
+        chat: {
+          completions: {
+            create: vi.fn().mockRejectedValue(new Error('API Error'))
+          }
+        }
+      };
 
       const result = await aiService.classifyLead('Test message');
       
@@ -67,13 +82,19 @@ describe('AIService', () => {
 
   describe('generateResponse', () => {
     it('debe generar respuesta', async () => {
-      mockOpenAI.chat.completions.create.mockResolvedValue({
-        choices: [{
-          message: {
-            content: 'Respuesta generada'
+      aiService.openai = {
+        chat: {
+          completions: {
+            create: vi.fn().mockResolvedValue({
+              choices: [{
+                message: {
+                  content: 'Respuesta generada'
+                }
+              }]
+            })
           }
-        }]
-      });
+        }
+      };
 
       const result = await aiService.generateResponse('Hola');
       
@@ -82,7 +103,13 @@ describe('AIService', () => {
     });
 
     it('debe manejar errores en respuesta', async () => {
-      mockOpenAI.chat.completions.create.mockRejectedValue(new Error('API Error'));
+      aiService.openai = {
+        chat: {
+          completions: {
+            create: vi.fn().mockRejectedValue(new Error('API Error'))
+          }
+        }
+      };
 
       const result = await aiService.generateResponse('Test');
       
