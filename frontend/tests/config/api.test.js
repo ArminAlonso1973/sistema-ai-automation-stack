@@ -17,7 +17,7 @@ describe('API Client', () => {
 
       const result = await api.get('/test')
       
-      expect(fetch).toHaveBeenCalledWith('http://localhost:8080/test')
+      expect(fetch).toHaveBeenCalledWith('http://localhost:3000/test')
       expect(result).toEqual(mockData)
     })
 
@@ -44,7 +44,7 @@ describe('API Client', () => {
 
       const result = await api.post('/test', postData)
       
-      expect(fetch).toHaveBeenCalledWith('http://localhost:8080/test', {
+      expect(fetch).toHaveBeenCalledWith('http://localhost:3000/test', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(postData)
@@ -75,7 +75,7 @@ describe('API Client', () => {
 
       const result = await api.put('/test/1', putData)
       
-      expect(fetch).toHaveBeenCalledWith('http://localhost:8080/test/1', {
+      expect(fetch).toHaveBeenCalledWith('http://localhost:3000/test/1', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(putData)
@@ -95,7 +95,7 @@ describe('API Client', () => {
 
       const result = await api.delete('/test/1')
       
-      expect(fetch).toHaveBeenCalledWith('http://localhost:8080/test/1', {
+      expect(fetch).toHaveBeenCalledWith('http://localhost:3000/test/1', {
         method: 'DELETE'
       })
       expect(result).toEqual(mockData)
