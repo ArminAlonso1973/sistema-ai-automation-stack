@@ -19,7 +19,6 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.3",
-    "@vitejs/eslint-config-react": "^1.0.1",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.45.0",
     "eslint-plugin-react": "^7.32.2",
@@ -30,6 +29,7 @@
     "vite": "^5.0.0",
     "vitest": "^1.0.4",
     "@testing-library/react": "^13.4.0",
-    "@testing-library/jest-dom": "^6.1.4"
+    "@testing-library/jest-dom": "^6.1.4",
+    "jsdom": "^22.1.0"
   }
 }
