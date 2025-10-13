@@ -3,6 +3,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import { apiLimiter, webhookLimiter, healthLimiter, adminLimiter } from './middleware/rateLimiter.js';
 import whatsappRoutes from './routes/whatsapp.routes.js';
 import leadsRoutes from './routes/leads.routes.js';
 import adminRoutes from './routes/admin.routes.js';
@@ -15,17 +16,24 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Rate limiting middleware
+app.use('/api/', apiLimiter);
+app.use('/webhook/', webhookLimiter);
+app.use('/admin/', adminLimiter);
+
 // Usar rutas
 app.use('/webhook/whatsapp', whatsappRoutes);
 app.use('/webhook/leads', leadsRoutes);
 app.use('/admin', adminRoutes);
 app.use('/api', apiRoutes);
 
-// Health check (5 líneas)
-app.get('/health', (req, res) => {
+// Health check con rate limiting
+app.get('/health', healthLimiter, (req, res) => {
   res.json({ 
     status: 'ok', 
-    timestamp: new Date().toISOString() 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 

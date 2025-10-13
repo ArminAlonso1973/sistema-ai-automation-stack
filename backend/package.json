@@ -11,7 +11,9 @@
     "test:unit": "vitest run tests/unit",
     "test:integration": "vitest run tests/integration",
     "test:services": "vitest run tests/unit --reporter=verbose",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "test:load": "vitest run tests/load",
+    "test:performance": "vitest run tests/load --reporter=verbose"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.38.0",
@@ -20,6 +22,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-rate-limit": "^7.5.1",
     "openai": "^4.20.0"
   },
   "devDependencies": {
