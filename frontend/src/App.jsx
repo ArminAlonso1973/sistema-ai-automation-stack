@@ -1,13 +1,21 @@
 import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Layout } from './components/Layout'
+import { Dashboard } from './pages/Dashboard'
+import { Leads } from './pages/Leads'
+import { Proposals } from './pages/Proposals'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Sistema AI Automation Stack</h1>
-        <p>Dashboard en construcción...</p>
-      </header>
-    </div>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/leads" element={<Leads />} />
+          <Route path="/proposals" element={<Proposals />} />
+        </Routes>
+      </Layout>
+    </Router>
   )
 }
 

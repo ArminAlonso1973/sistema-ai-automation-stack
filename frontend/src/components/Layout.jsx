@@ -1,5 +1,6 @@
-// src/components/Layout.jsx - Layout principal con navegación
+// src/components/Layout.jsx - Layout principal con navegación y autenticación
 import { useState } from 'react'
+import { NavLink } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 
 export function Layout({ children }) {
@@ -196,20 +197,7 @@ function LoginForm() {
 }
 
 // Navigation Link Components
-function NavLink({ href, children, active = false }) {
-  return (
-    <a
-      href={href}
-      className={`${
-        active
-          ? 'border-indigo-500 text-gray-900'
-          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-      } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
-    >
-      {children}
-    </a>
-  )
-}
+// Removed CustomNavLink function - using React Router NavLink instead
 
 function MobileNavLink({ href, children, active = false }) {
   return (
