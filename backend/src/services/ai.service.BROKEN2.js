@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+// import { logger } from '../utils/logger.js'; // Comentado temporalmente
 
 class AIService {
   constructor() {
@@ -14,7 +15,6 @@ class AIService {
     try {
       // En desarrollo, retornar mock si la API key es de test
       if (process.env.OPENAI_API_KEY === 'sk-test-key-for-development' || !process.env.OPENAI_API_KEY) {
-        console.log(`[DEV] Mock lead classification for ${clientId}: ${message}`);
         return {
           classification: 'potencial',
           priority: 'media',
@@ -63,7 +63,6 @@ class AIService {
     try {
       // En desarrollo, retornar mock si la API key es de test
       if (process.env.OPENAI_API_KEY === 'sk-test-key-for-development' || !process.env.OPENAI_API_KEY) {
-        console.log(`[DEV] Mock response for ${clientId}: ${message}`);
         return `Hola! Gracias por tu mensaje: "${message}". Te contactaremos pronto. (Respuesta de desarrollo)`;
       }
 

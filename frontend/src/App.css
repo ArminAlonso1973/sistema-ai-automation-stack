@@ -1,0 +1,31 @@
+/* App.css - Estilos principales */
+
+.App {
+  text-align: center;
+}
+
+/* Estilos adicionales si son necesarios */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.error {
+  color: #ef4444;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.success {
+  color: #059669;
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin: 1rem 0;
+}
