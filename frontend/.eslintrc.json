@@ -4,11 +4,16 @@
     "es2020": true
   },
   "extends": [
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime"
   ],
   "parserOptions": {
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "settings": {
     "react": {
@@ -16,11 +21,13 @@
     }
   },
   "plugins": [
+    "react",
     "react-refresh"
   ],
   "rules": {
     "react-refresh/only-export-components": "warn",
     "no-unused-vars": "warn",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off"
   }
 }

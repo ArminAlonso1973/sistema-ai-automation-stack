@@ -1,43 +1,78 @@
 // db.service.js - Servicio para base de datos
-// services/cache.service.js
-const { Redis } = require('@upstash/redis')
+import { createClient } from '@supabase/supabase-js';
 
-class CacheService {
-  
+class DatabaseService {
   constructor() {
-    this.redis = new Redis({
-      url: process.env.UPSTASH_REDIS_URL,
-      token: process.env.UPSTASH_REDIS_TOKEN
-    })
+    this.supabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_KEY
+    );
   }
 
-  // Obtener valor
-  async get(key) {
+  // Obtener leads
+  async getLeads() {
     try {
-      return await this.redis.get(key)
+      const { data, error } = await this.supabase
+        .from('leads')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data;
     } catch (error) {
-      console.error('Error en caché GET:', error)
-      return null
+      console.error('Error obteniendo leads:', error);
+      return [];
     }
   }
 
-  // Guardar valor con expiración
-  async set(key, value, expirationSeconds = 3600) {
+  // Crear nuevo lead
+  async createLead(leadData) {
     try {
-      await this.redis.setex(key, expirationSeconds, value)
+      const { data, error } = await this.supabase
+        .from('leads')
+        .insert([leadData])
+        .select();
+
+      if (error) throw error;
+      return data[0];
     } catch (error) {
-      console.error('Error en caché SET:', error)
+      console.error('Error creando lead:', error);
+      throw error;
     }
   }
 
-  // Eliminar valor
-  async delete(key) {
+  // Actualizar lead
+  async updateLead(id, updates) {
     try {
-      await this.redis.del(key)
+      const { data, error } = await this.supabase
+        .from('leads')
+        .update(updates)
+        .eq('id', id)
+        .select();
+
+      if (error) throw error;
+      return data[0];
     } catch (error) {
-      console.error('Error en caché DELETE:', error)
-    }q
+      console.error('Error actualizando lead:', error);
+      throw error;
+    }
+  }
+
+  // Obtener conversaciones
+  async getConversations() {
+    try {
+      const { data, error } = await this.supabase
+        .from('conversations')
+        .select('*')
+        .order('updated_at', { ascending: false });
+
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error obteniendo conversaciones:', error);
+      return [];
+    }
   }
 }
 
-module.exports = new CacheService()
+export default new DatabaseService();
