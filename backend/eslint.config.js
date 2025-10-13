@@ -1,0 +1,20 @@
+module.exports = {
+  env: {
+    node: true,
+    es2022: true,
+    commonjs: true
+  },
+  extends: [
+    'eslint:recommended'
+  ],
+  parserOptions: {
+    ecmaVersion: 2022,
+    sourceType: 'script'
+  },
+  rules: {
+    'no-unused-vars': 'warn',
+    'no-console': 'off',
+    'semi': ['error', 'always'],
+    'quotes': ['error', 'single']
+  }
+};
