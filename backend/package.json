@@ -10,6 +10,7 @@
     "test": "vitest",
     "test:unit": "vitest run tests/unit",
     "test:integration": "vitest run tests/integration",
+    "test:services": "vitest run tests/unit --reporter=verbose",
     "test:coverage": "vitest --coverage"
   },
   "dependencies": {
