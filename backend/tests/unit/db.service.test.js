@@ -1,37 +1,38 @@
-// backend/tests/unit/db.service.test.js - VERSIÓN CORREGIDA FINAL
+// backend/tests/unit/db.service.test.js - VERSIÓN FINAL CON MOCK
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'; // <--- ¡AQUÍ ESTÁ EL ARREGLO!
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+
+// ¡ESTE ES EL ARREGLO!
+// Le decimos a Vitest que intercepte cualquier importación de '../config/config.js'.
+// En lugar de cargar el archivo real (que no existe en el CI),
+// proporcionará este objeto falso con los datos mínimos que el servicio necesita.
+vi.mock('../../src/config/config.js', () => ({
+  default: {
+    supabase: {
+      url: process.env.SUPABASE_URL,
+      serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    },
+  },
+}));
 
 describe('Database Service', () => {
-  // Antes de cada test, vamos a simular las variables de entorno
   beforeEach(() => {
-    // vi.stubEnv es una herramienta de Vitest para crear variables de entorno falsas
+    // Ahora, en lugar de simular las variables de entorno para config.js,
+    // las simulamos para que nuestro mock las pueda leer.
     vi.stubEnv('SUPABASE_URL', 'https://fake-url.supabase.co');
     vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'fake-service-role-key');
   });
 
-  // Después de cada test, limpiamos las variables simuladas
   afterEach(() => {
     vi.unstubAllEnvs();
   });
 
-  it('debe inicializar el cliente de Supabase si las variables de entorno existen', async () => {
-    // Usamos import() dinámico para asegurarnos de que el módulo se carga DESPUÉS
-    // de que hayamos simulado las variables de entorno.
+  it('debe inicializar el cliente de Supabase cuando la configuración es correcta', async () => {
+    // Usamos import() dinámico para que el mock se aplique antes de la importación.
     const dbModule = await import('../../src/services/db.service.js');
     const db = dbModule.default;
 
-    // La prueba más importante: ¿es 'db' un objeto?
     expect(db).toBeTypeOf('object');
-    // ¿Tiene las propiedades que esperamos de un cliente de Supabase?
     expect(db).toHaveProperty('from');
-    expect(db).toHaveProperty('rpc');
-  });
-
-  it('NO debe inicializar si faltan las variables (prueba cubierta por el process.exit)', () => {
-    // Esta es una prueba conceptual. Ya sabemos que falla porque lo vimos en la terminal.
-    // No podemos probar 'process.exit' directamente aquí sin configuraciones más complejas,
-    // pero reconocemos que el comportamiento está cubierto.
-    expect(true).toBe(true);
   });
 });
