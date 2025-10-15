@@ -12,9 +12,9 @@ describe('Database Service', () => {
     expect(dbService).toHaveProperty('supabase');
     expect(dbService.supabase).toBeTypeOf('object');
     
-    // Verifica que tiene la propiedad mockMode
+    // Verifica que tiene la propiedad mockMode (en tests siempre será true por las env vars)
     expect(dbService).toHaveProperty('mockMode');
-    expect(dbService.mockMode).toBe(false);
+    expect(dbService.mockMode).toBe(true);
   });
 
   it('debe tener métodos principales del servicio', () => {
