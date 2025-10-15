@@ -2,18 +2,13 @@ import { createClient } from '@supabase/supabase-js';
 
 class DatabaseService {
   constructor() {
-    // En desarrollo, usar mock si no hay keys reales
+    // Conexión directa a Supabase
     const supabaseUrl = process.env.SUPABASE_URL || 'https://mock-project.supabase.co';
     const supabaseKey = process.env.SUPABASE_ANON_KEY || 'mock-anon-key-for-development';
     
-    if (supabaseKey === 'test-anon-key-for-development' || supabaseKey === 'mock-anon-key-for-development') {
-      console.log('[DEV] Database Service initialized with mocks');
-      this.mockMode = true;
-      this.supabase = null;
-    } else {
-      this.mockMode = false;
-      this.supabase = createClient(supabaseUrl, supabaseKey);
-    }
+    this.supabase = createClient(supabaseUrl, supabaseKey);
+    console.log('Supabase client initialized.');
+    this.mockMode = false;
   }
 
   async getLeads() {
