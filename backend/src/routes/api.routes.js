@@ -3,6 +3,8 @@ import express from 'express';
 import dbService from '../services/db.service.js';
 import aiService from '../services/ai.service.js';
 import logger from '../utils/logger.js';
+import tasksRouter from './tasks.routes.js'; // 1. Importa el nuevo enrutador
+
 
 const router = express.Router();
 
@@ -110,5 +112,8 @@ router.post('/whatsapp/test', async (req, res) => {
     res.status(500).json({ error: 'Error interno' });
   }
 });
+
+// Register tasks router
+router.use('/tasks', tasksRouter); // Mount tasks router
 
 export default router;
