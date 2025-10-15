@@ -52,3 +52,7 @@ logs
 # Temporary folders
 tmp/
 temp/
+
+# config files
+config.js
+backend/src/config/config.js
